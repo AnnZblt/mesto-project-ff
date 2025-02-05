@@ -13,9 +13,11 @@ const placesList = document.querySelector('.places__list');
 const createCard = (item, removeCardCb) => {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+  const cardImage = cardElement.querySelector('.card__image');
   const deleteButton = cardElement.querySelector('.card__delete-button');
 
-  cardElement.querySelector('.card__image').src = item.link;
+  cardImage.src = item.link;
+  cardImage.alt = `Красивый песзаж с видом, в котором Жак-Ив Кусто побывал на этот раз – ${item.name}`;
   cardElement.querySelector('.card__title').textContent = item.name;
 
   deleteButton.addEventListener('click', () => {
