@@ -1,5 +1,5 @@
 const openModal = (popup) => {
-  popup.classList.add('popup_is-animated', 'popup_is-opened');
+  popup.classList.add('popup_is-opened');
   popup.addEventListener('click', closeByClick);
   document.addEventListener('keydown', closeByEscape);
 };
