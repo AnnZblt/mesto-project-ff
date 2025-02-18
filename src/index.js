@@ -1,6 +1,6 @@
 import './pages/index.css';
 import initialCards from './scripts/data.js';
-import { openModal, closeModal } from './scripts/modalController.js';
+import { openModal, closeModal } from './scripts/modal.js';
 import avatar from './images/avatar.jpg';
 import { deleteCard, likeCard, createCard } from './scripts/cards.js';
 
@@ -31,14 +31,14 @@ popupsArr.forEach((popup) => {
 
 profileImage.style.backgroundImage = `url(${avatar})`;
 
-const editProfileController = (event) => {
+const handleFormSubmit = (event) => {
   event.preventDefault();
   profileTitle.textContent = editNameInput.value;
   profileDescription.textContent = editDescription.value;
   closeModal(editProfilePopup);
 }
 
-const addImageController = (event) => {
+const addImageForm = (event) => {
   event.preventDefault();
   const newImage = {
     name: newCardDescription.value,
@@ -73,8 +73,8 @@ addNewImageButton.addEventListener('click', () => {
   openModal(newCardPopup);
 });
 
-editProfileForm.addEventListener('submit', editProfileController);
-addCardForm.addEventListener('submit', addImageController);
+editProfileForm.addEventListener('submit', handleFormSubmit);
+addCardForm.addEventListener('submit', addImageForm);
 
 
 fillGallery(initialCards, placesList);
