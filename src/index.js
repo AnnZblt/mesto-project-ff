@@ -1,8 +1,8 @@
 import './pages/index.css';
-import initialCards from './scripts/data.js';
+import initialCards from './scripts/cards.js';
 import { openModal, closeModal } from './scripts/modal.js';
 import avatar from './images/avatar.jpg';
-import { deleteCard, likeCard, createCard } from './scripts/cards.js';
+import { deleteCard, likeCard, createCard } from './scripts/card.js';
 
 
 const placesList = document.querySelector('.places__list');
