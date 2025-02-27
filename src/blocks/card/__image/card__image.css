@@ -4,6 +4,12 @@
   width: 100%;
 }
 
+.card__image {
+  min-height: 282px;
+  height: auto;
+  aspect-ratio: 1 / 1;
+}
+
 .card__image:hover {
   cursor: pointer;
 }

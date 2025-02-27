@@ -13,3 +13,17 @@
   position: relative;
   overflow: hidden;
 }
+
+.card__description {
+  padding: 22px 20px;
+  min-height: 40px;
+}
+
+.card__like-container {
+  display: grid;
+}
+
+.card__like-value {
+  text-align: center;
+  margin-top: 3px;
+}

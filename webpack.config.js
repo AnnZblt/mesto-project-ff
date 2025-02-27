@@ -27,7 +27,7 @@ module.exports = {
         exclude: /(node_modules\/(?!html-webpack-plugin))/,
       },
       {
-        test: /\.(png|svg|jpg|gif|woff(2)?|eot|ttf|otf)$/,
+        test: /\.(png|svg|jpe?g|gif|woff(2)?|eot|ttf|otf)$/,
         type: 'asset/resource',
       },
       {
