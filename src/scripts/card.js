@@ -1,33 +1,43 @@
-import fetchRequest from './api.js';
-import { config } from '../index.js'
-const myId = '14700000ed08b793808b68e4';
+import { getUserInfo, deleteCardRequest, putLikeRequest, removeLikeRequest } from './api.js';
 
-const deleteCard = (card) => {
-  fetchRequest(config, `cards/${card.dataset.cardId}`, 'DELETE')
+const cardInteraction = (item, deleteButton, likeButton) => {
+  getUserInfo()
+    .then((data) => {
+      if (item.owner._id !== data._id) {
+        deleteButton.style.display = 'none';
+      }
+      item.likes.forEach((likeOwner) => {
+        if (likeOwner._id === data._id) {
+          likeButton.classList.add('card__like-button_is-active');
+        }
+      });
+    })
+};
+
+const deleteCard = (deletedCard, id) => {
+  deleteCardRequest(id)
     .then(() => {
-      card.remove();
+      deletedCard.remove();
     })
     .catch((err) => {
-      console.log('Не получилось удалить карточку', err);
+      console.log('Не получилось удалить карточку. ', err);
     });
 };
 
-const likeCard = (button, cardData, likeCounterCb) => {
+const likeCard = (button, counter, cardData, likeCounterCb) => {
   if (button.classList.contains('card__like-button_is-active')) {
-    fetchRequest(config, `cards/likes/${cardData._id}`, 'DELETE')
-      .then(res => res.json())
+    removeLikeRequest(cardData)
       .then((data) => {
-        likeCounterCb(data.likes, button.nextElementSibling);
+        likeCounterCb(data.likes, counter);
         button.classList.remove('card__like-button_is-active');
       })
       .catch((err) => {
         console.log('Не получилось убрать лайк. ', err)
       });
   } else {
-    fetchRequest(config, `cards/likes/${cardData._id}`, 'PUT')
-      .then(res => res.json())
+    putLikeRequest(cardData)
       .then((data) => {
-        likeCounterCb(data.likes, button.nextElementSibling);
+        likeCounterCb(data.likes, counter);
         button.classList.add('card__like-button_is-active');
       })
       .catch((err) => {
@@ -51,31 +61,21 @@ const createCard = (item, removeCardCb, likeCb, openFullviewCb, counterCb) => {
   cardImage.src = item.link;
   cardImage.alt = item.name;
   cardElement.querySelector('.card__title').textContent = item.name;
-  cardElement.dataset.cardId = item._id;
 
   counterCb(item.likes, likeCount);
+  cardInteraction(item, deleteButton, likeButton);
 
   deleteButton.addEventListener('click', () => {
-    removeCardCb(cardElement, item);
+    removeCardCb(cardElement, item._id);
   });
 
   likeButton.addEventListener('click', () => {
-    likeCb(likeButton, item, counterCb);
+    likeCb(likeButton, likeCount, item, counterCb);
   });
 
   cardImage.addEventListener('click', () => {
     openFullviewCb(item);
   });
-
-  item.likes.forEach((likeOwner) => {
-    if (likeOwner._id === myId) {
-      likeButton.classList.add('card__like-button_is-active');
-    }
-  });
-
-  if (item.owner._id !== myId) {
-    deleteButton.style.display = 'none';
-  }
 
   return cardElement;
 }

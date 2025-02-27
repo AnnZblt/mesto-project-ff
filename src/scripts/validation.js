@@ -43,9 +43,6 @@ const enableValidation = (settingsObj) => {
   const formList = Array.from(document.querySelectorAll(settingsObj.formSelector));
 
   formList.forEach((formElement) => {
-    formElement.addEventListener('submit', (evt) => {
-      evt.preventDefault();
-    });
     setEventListeners(formElement, settingsObj);
   });
 };
@@ -71,8 +68,7 @@ const clearValidation = (formElement, settingsObj) => {
 
   inputList.forEach((inputElement) => {
     inputElement.setCustomValidity('');
-    inputElement.classList.remove(settingsObj.inputErrorClass);
-    inputElement.nextElementSibling.classList.remove(settingsObj.errorClass);
+    hideInputError(formElement, inputElement, settingsObj);
     inputElement.blur();
   });
 };
