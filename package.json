@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "build": "webpack --mode production",
     "dev": "webpack serve"
   },
   "repository": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist",
     "type": "git",
     "url": "git+https://github.com/AnnZblt/mesto-project-ff.git"
   },
