@@ -1,18 +1,4 @@
-import { getUserInfo, deleteCardRequest, putLikeRequest, removeLikeRequest } from './api.js';
-
-const cardInteraction = (item, deleteButton, likeButton) => {
-  getUserInfo()
-    .then((data) => {
-      if (item.owner._id !== data._id) {
-        deleteButton.style.display = 'none';
-      }
-      item.likes.forEach((likeOwner) => {
-        if (likeOwner._id === data._id) {
-          likeButton.classList.add('card__like-button_is-active');
-        }
-      });
-    })
-};
+import { deleteCardRequest, putLikeRequest, removeLikeRequest } from './api.js';
 
 const deleteCard = (deletedCard, id) => {
   deleteCardRequest(id)
@@ -24,11 +10,11 @@ const deleteCard = (deletedCard, id) => {
     });
 };
 
-const likeCard = (button, counter, cardData, likeCounterCb) => {
+const likeCard = (button, counter, cardData) => {
   if (button.classList.contains('card__like-button_is-active')) {
     removeLikeRequest(cardData)
       .then((data) => {
-        likeCounterCb(data.likes, counter);
+        counter.textContent = data.likes.length;
         button.classList.remove('card__like-button_is-active');
       })
       .catch((err) => {
@@ -37,7 +23,7 @@ const likeCard = (button, counter, cardData, likeCounterCb) => {
   } else {
     putLikeRequest(cardData)
       .then((data) => {
-        likeCounterCb(data.likes, counter);
+        counter.textContent = data.likes.length;
         button.classList.add('card__like-button_is-active');
       })
       .catch((err) => {
@@ -46,11 +32,7 @@ const likeCard = (button, counter, cardData, likeCounterCb) => {
   }
 };
 
-const likeCounter = (arr, counter) => {
-  counter.textContent = arr.length;
-}
-
-const createCard = (item, removeCardCb, likeCb, openFullviewCb, counterCb) => {
+const createCard = (item, removeCardCb, likeCb, openFullviewCb, userId) => {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const cardImage = cardElement.querySelector('.card__image');
@@ -61,16 +43,24 @@ const createCard = (item, removeCardCb, likeCb, openFullviewCb, counterCb) => {
   cardImage.src = item.link;
   cardImage.alt = item.name;
   cardElement.querySelector('.card__title').textContent = item.name;
+  likeCount.textContent = item.likes.length;
 
-  counterCb(item.likes, likeCount);
-  cardInteraction(item, deleteButton, likeButton);
+  if (item.owner._id !== userId) {
+    deleteButton.style.display = 'none';
+  }
+
+  item.likes.forEach((likeOwner) => {
+    if (likeOwner._id === userId) {
+      likeButton.classList.add('card__like-button_is-active');
+    }
+  });
 
   deleteButton.addEventListener('click', () => {
     removeCardCb(cardElement, item._id);
   });
 
   likeButton.addEventListener('click', () => {
-    likeCb(likeButton, likeCount, item, counterCb);
+    likeCb(likeButton, likeCount, item);
   });
 
   cardImage.addEventListener('click', () => {
@@ -83,6 +73,5 @@ const createCard = (item, removeCardCb, likeCb, openFullviewCb, counterCb) => {
 export {
   deleteCard,
   likeCard,
-  likeCounter,
   createCard,
 }

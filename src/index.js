@@ -1,6 +1,6 @@
 import './pages/index.css';
 import { openModal, closeModal } from './scripts/modal.js';
-import { deleteCard, likeCard, likeCounter, createCard } from './scripts/card.js';
+import { deleteCard, likeCard, createCard } from './scripts/card.js';
 import { enableValidation, clearValidation } from './scripts/validation.js';
 import {
   getUserInfo, getInitialCards, editProfileInfoRequest, addNewImageRequest, updateProfilePhotoRequest
@@ -48,6 +48,8 @@ const renderLoading = (button, isLoading) => {
   }
 };
 
+enableValidation(validationSettings);
+
 const openFullviewImage = (item) => {
   openModal(fullviewPopup)
   fullviewImage.src = item.link;
@@ -88,7 +90,7 @@ const addImageForm = (event) => {
 
   addNewImageRequest(newImage.place, newImage.source)
     .then((data) => {
-      placesList.prepend(createCard(data, deleteCard, likeCard, openFullviewImage, likeCounter));
+      placesList.prepend(createCard(data, deleteCard, likeCard, openFullviewImage, data.owner._id));
       closeModal(newCardPopup);
       addCardForm.reset();
     })
@@ -127,21 +129,18 @@ editProfileButton.addEventListener('click', () => {
   editNameInput.value = profileTitle.textContent;
   editDescription.value = profileDescription.textContent;
   clearValidation(editProfileForm, validationSettings);
-  enableValidation(validationSettings);
 });
 
 addNewImageButton.addEventListener('click', () => {
   addCardForm.reset();
   openModal(newCardPopup);
   clearValidation(addCardForm, validationSettings);
-  enableValidation(validationSettings);
 });
 
 profileImage.addEventListener('click', () => {
   editAvatarForm.reset();
   openModal(editAvatarPopup);
   clearValidation(editAvatarForm, validationSettings);
-  enableValidation(validationSettings);
 });
 
 editProfileForm.addEventListener('submit', handleFormSubmit);
@@ -161,7 +160,7 @@ Promise.all([
     profileImage.style.backgroundImage = `url(${info.avatar})`;
 
     initialCards.forEach((item) => {
-      const newCard = createCard(item, deleteCard, likeCard, openFullviewImage, likeCounter);
+      const newCard = createCard(item, deleteCard, likeCard, openFullviewImage, info._id);
       placesList.append(newCard);
     });
   })
